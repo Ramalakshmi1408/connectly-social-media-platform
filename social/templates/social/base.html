@@ -1,0 +1,217 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Connectly{% endblock %}</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f6fc;
+            color: #333;
+            min-height: 100vh;
+        }
+
+        nav {
+            background: white;
+            padding: 18px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .logo {
+            font-size: 26px;
+            font-weight: bold;
+            color: #6558e8;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 22px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: #555;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: #6558e8;
+        }
+
+        .btn {
+            display: inline-block;
+            background: #6558e8;
+            color: white !important;
+            padding: 10px 18px;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn:hover {
+            background: #5144cf;
+            transform: translateY(-1px);
+        }
+
+        .container {
+            width: 86%;
+            max-width: 1200px;
+            margin: 30px auto;
+            min-height: 65vh;
+        }
+
+        .card {
+            background: white;
+            border-radius: 14px;
+            padding: 22px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.04);
+            margin-bottom: 20px;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0 16px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 14px;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        label {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .messages {
+            width: 86%;
+            max-width: 1200px;
+            margin: 20px auto;
+        }
+
+        .message {
+            background: #e8f7ed;
+            color: #247542;
+            padding: 13px 18px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #999;
+            font-size: 13px;
+            margin-top: 40px;
+        }
+
+        @media (max-width: 650px) {
+            nav {
+                padding: 16px 5%;
+            }
+
+            .nav-links {
+                gap: 13px;
+            }
+
+            .container {
+                width: 92%;
+            }
+
+            .logo {
+                font-size: 23px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <a href="{% url 'home' %}" class="logo">Connectly.</a>
+
+        <div class="nav-links">
+
+            <a href="{% url 'home' %}">Home</a>
+
+            <a href="{% url 'search' %}">Search</a>
+
+            {% if user.is_authenticated %}
+
+                <a href="{% url 'profile' user.username %}">
+                    My Profile
+                </a>
+
+                <a href="{% url 'edit_profile' %}">
+                    Edit Profile
+                </a>
+
+                <form method="POST" action="{% url 'logout' %}"
+                      style="display:inline; margin:0;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn">
+                        Logout
+                    </button>
+                </form>
+
+            {% else %}
+
+                <a href="{% url 'login' %}">Login</a>
+
+                <a href="{% url 'register' %}" class="btn">
+                    Join Now
+                </a>
+
+            {% endif %}
+
+        </div>
+    </nav>
+
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="message">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <main class="container">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer>
+        © 2026 Connectly. Connect, Share and Discover.
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,80 @@
+
+{% extends 'social/base.html' %}
+
+{% block title %}Search | Connectly{% endblock %}
+
+{% block content %}
+<div style="max-width:850px; margin:35px auto;">
+
+    <div class="card" style="padding:30px; margin-bottom:25px;">
+        <h2>Discover Connectly</h2>
+        <p style="color:#999; margin-bottom:20px;">
+            Find people and explore posts.
+        </p>
+
+        <form method="GET" action="{% url 'search' %}"
+              style="display:flex; gap:10px;">
+            <input
+                type="text"
+                name="q"
+                value="{{ query }}"
+                placeholder="Search users or posts..."
+                style="flex:1; padding:13px; border:1px solid #ddd;
+                       border-radius:8px;"
+            >
+            <button type="submit" class="btn">Search</button>
+        </form>
+    </div>
+
+    {% if query %}
+        <div class="card" style="padding:25px; margin-bottom:25px;">
+            <h3>People</h3>
+
+            {% for searched_user in users %}
+                <div style="padding:12px 0; border-bottom:1px solid #eee;">
+                    <a href="{% url 'profile' searched_user.username %}"
+                       style="color:#6558e8; text-decoration:none;
+                              font-weight:bold;">
+                        @{{ searched_user.username }}
+                    </a>
+                </div>
+            {% empty %}
+                <p style="color:#999;">No users found.</p>
+            {% endfor %}
+        </div>
+
+        <div class="card" style="padding:25px;">
+            <h3>Posts</h3>
+
+            {% for post in posts %}
+                <div style="padding:15px 0; border-bottom:1px solid #eee;">
+                    <a href="{% url 'profile' post.author.username %}"
+                       style="color:#6558e8; text-decoration:none;
+                              font-weight:bold;">
+                        @{{ post.author.username }}
+                    </a>
+
+                    <p style="margin-top:10px;">{{ post.caption }}</p>
+
+                    {% if post.image %}
+                        <img src="{{ post.image.url }}"
+                             alt="Post image"
+                             style="max-width:100%; max-height:300px;
+                                    border-radius:10px; margin-top:10px;">
+                    {% endif %}
+                </div>
+            {% empty %}
+                <p style="color:#999;">No posts found.</p>
+            {% endfor %}
+        </div>
+
+    {% else %}
+        <div class="card" style="padding:25px; text-align:center;">
+            <p style="color:#999;">
+                Enter a username or keyword to start searching.
+            </p>
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}

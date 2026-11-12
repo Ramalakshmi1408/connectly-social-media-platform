@@ -1,0 +1,66 @@
+
+{% extends 'social/base.html' %}
+
+{% block title %}Create Account | Connectly{% endblock %}
+
+{% block content %}
+
+<div style="max-width:480px; margin:30px auto;">
+
+    <div class="card" style="padding:35px;">
+
+        <div style="text-align:center; margin-bottom:28px;">
+            <h2 style="font-size:27px; color:#202438;">Join Connectly</h2>
+            <p style="color:#999; font-size:14px; margin-top:8px;">
+                Create your account and start connecting.
+            </p>
+        </div>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            {% for field in form %}
+
+                <div style="margin-bottom:10px;">
+                    <label>{{ field.label }}</label>
+                    {{ field }}
+
+                    {% if field.help_text %}
+                        <div style="font-size:12px; color:#999; margin-top:-10px; margin-bottom:10px;">
+                            {{ field.help_text|safe }}
+                        </div>
+                    {% endif %}
+
+                    {% for error in field.errors %}
+                        <p style="color:#d93636; font-size:12px; margin-bottom:8px;">
+                            {{ error }}
+                        </p>
+                    {% endfor %}
+                </div>
+
+            {% endfor %}
+
+            {% if form.non_field_errors %}
+                <div class="errorlist">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            <button type="submit" class="btn" style="width:100%; margin-top:12px;">
+                Create Account
+            </button>
+
+        </form>
+
+        <p style="text-align:center; margin-top:22px; font-size:14px; color:#777;">
+            Already have an account?
+            <a href="{% url 'login' %}" style="color:#6558e8; font-weight:700; text-decoration:none;">
+                Login here
+            </a>
+        </p>
+
+    </div>
+
+</div>
+
+{% endblock %}

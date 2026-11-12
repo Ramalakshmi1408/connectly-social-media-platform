@@ -1,0 +1,73 @@
+
+{% extends 'social/base.html' %}
+
+{% block title %}Edit Profile | Connectly{% endblock %}
+
+{% block content %}
+
+<div style="max-width:550px; margin:30px auto;">
+
+    <div class="card" style="padding:35px;">
+
+        <div style="margin-bottom:25px;">
+            <h2>Edit Your Profile</h2>
+            <p style="color:#999; font-size:14px; margin-top:8px;">
+                Update your personal information.
+            </p>
+        </div>
+
+        {% if user.profile.profile_picture %}
+            <div style="text-align:center; margin-bottom:20px;">
+                <img src="{{ user.profile.profile_picture.url }}"
+                     style="width:100px; height:100px; border-radius:50%; object-fit:cover;">
+                <p style="font-size:13px; color:#999; margin-top:8px;">
+                    Current Profile Picture
+                </p>
+            </div>
+        {% endif %}
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            {% for field in form %}
+
+                <div style="margin-bottom:15px;">
+
+                    <label>{{ field.label }}</label>
+
+                    {{ field }}
+
+                    {% if field.help_text %}
+                        <p style="font-size:12px; color:#999;">
+                            {{ field.help_text }}
+                        </p>
+                    {% endif %}
+
+                    {% for error in field.errors %}
+                        <p style="color:#d93636; font-size:12px;">
+                            {{ error }}
+                        </p>
+                    {% endfor %}
+
+                </div>
+
+            {% endfor %}
+
+            <button type="submit" class="btn" style="width:100%; margin-top:10px;">
+                Save Changes
+            </button>
+
+        </form>
+
+        <div style="text-align:center; margin-top:20px;">
+            <a href="{% url 'profile' user.username %}"
+               style="color:#6558e8; text-decoration:none; font-size:14px;">
+                Cancel and Return to Profile
+            </a>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

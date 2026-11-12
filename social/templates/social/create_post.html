@@ -1,0 +1,51 @@
+
+{% extends 'social/base.html' %}
+
+{% block title %}Create Post | Connectly{% endblock %}
+
+{% block content %}
+
+<div style="max-width:600px; margin:35px auto;">
+
+    <div class="card" style="padding:35px;">
+
+        <h2 style="margin-bottom:8px;">Create a Post</h2>
+
+        <p style="color:#999; font-size:14px; margin-bottom:25px;">
+            Share what's happening in your world.
+        </p>
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <label>Write a Caption</label>
+            {{ form.caption }}
+
+            {% for error in form.caption.errors %}
+                <p style="color:red; font-size:13px;">{{ error }}</p>
+            {% endfor %}
+
+            <label>Upload a Photo (Optional)</label>
+            {{ form.image }}
+
+            {% for error in form.image.errors %}
+                <p style="color:red; font-size:13px;">{{ error }}</p>
+            {% endfor %}
+
+            <button type="submit" class="btn" style="width:100%; margin-top:20px;">
+                Publish Post
+            </button>
+
+        </form>
+
+        <div style="text-align:center; margin-top:20px;">
+            <a href="{% url 'home' %}" style="color:#6558e8; text-decoration:none;">
+                Cancel
+            </a>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

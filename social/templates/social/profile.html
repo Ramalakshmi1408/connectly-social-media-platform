@@ -1,0 +1,115 @@
+
+{% extends 'social/base.html' %}
+
+{% block title %}{{ profile_user.username }} | Connectly{% endblock %}
+
+{% block content %}
+
+<div class="card" style="text-align:center; padding:40px 25px;">
+
+    {% if profile_user.profile.profile_picture %}
+        <img src="{{ profile_user.profile.profile_picture.url }}"
+             style="width:115px; height:115px; border-radius:50%; object-fit:cover; border:4px solid #e9e7ff;">
+    {% else %}
+        <div style="width:115px; height:115px; border-radius:50%; background:#e9e7ff; display:flex; align-items:center; justify-content:center; color:#6558e8; font-size:42px; font-weight:800; margin:auto;">
+            {{ profile_user.username|first|upper }}
+        </div>
+    {% endif %}
+
+    <h2 style="margin-top:18px;">{{ profile_user.username }}</h2>
+
+    {% if profile_user.profile.bio %}
+        <p style="color:#777; margin-top:10px;">
+            {{ profile_user.profile.bio }}
+        </p>
+    {% endif %}
+
+    {% if profile_user.profile.location %}
+        <p style="color:#999; font-size:13px; margin-top:8px;">
+            {{ profile_user.profile.location }}
+        </p>
+    {% endif %}
+
+    <div style="display:flex; justify-content:center; gap:45px; margin:25px 0;">
+
+        <div>
+            <h3>{{ posts.count }}</h3>
+            <p style="color:#999; font-size:13px;">Posts</p>
+        </div>
+
+        <div>
+            <h3>{{ followers_count }}</h3>
+            <p style="color:#999; font-size:13px;">Followers</p>
+        </div>
+
+        <div>
+            <h3>{{ following_count }}</h3>
+            <p style="color:#999; font-size:13px;">Following</p>
+        </div>
+
+    </div>
+
+    {% if user.is_authenticated and user == profile_user %}
+        <a href="{% url 'edit_profile' %}" class="btn">
+            Edit Profile
+        </a>
+    {% elif user.is_authenticated %}
+        <form method="POST" action="{% url 'follow' profile_user.username %}" style="margin-top:10px;">
+            {% csrf_token %}
+
+            {% if is_following %}
+                <button type="submit" class="btn" style="background:#777;">
+                    Unfollow
+                </button>
+            {% else %}
+                <button type="submit" class="btn">
+                    Follow
+                </button>
+            {% endif %}
+        </form>
+    {% endif %}
+
+</div>
+
+<h2 style="margin:25px 0 18px;">Posts by {{ profile_user.username }}</h2>
+
+<div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:15px;">
+
+    {% for post in posts %}
+
+        <div class="card" style="padding:12px; margin:0;">
+
+            {% if post.image %}
+                <img src="{{ post.image.url }}"
+                     style="width:100%; height:190px; object-fit:cover; border-radius:9px;">
+            {% endif %}
+
+            <p style="font-size:14px; margin-top:10px;">
+                {{ post.caption|truncatechars:90 }}
+            </p>
+
+            <p style="font-size:12px; color:#999; margin-top:8px;">
+                ♥ {{ post.likes.count }} Likes
+            </p>
+
+        </div>
+
+    {% empty %}
+
+        <div class="card" style="grid-column:1/-1; text-align:center;">
+            <p style="color:#999;">No posts shared yet.</p>
+        </div>
+
+    {% endfor %}
+
+</div>
+
+<style>
+    @media(max-width:650px) {
+        .container > div[style*="repeat(3"] {
+            grid-template-columns:repeat(2, 1fr) !important;
+        }
+    }
+</style>
+
+{% endblock %}
